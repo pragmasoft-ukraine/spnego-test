@@ -1,11 +1,20 @@
+# Kerberos credentials
+
 `kadmin:  ank -randkey HTTP/localhost`
 
 `kadmin:  ktadd -k /home/zdv/Projects/test/spnego-test/http.keytab HTTP/localhost`
 
-`kinit`
+`kinit` obtains kerberos tgt ticket and stores it into the local cache
 
-`klist`
+`klist` shows ticket information
 
 `curl --negotiate -u : -b ~/curl-cookies.txt -c ~/curl-cookies.txt -v http://localhost:8080/actuator`
 
-`kdestroy`
+`kdestroy` destroys ticket
+
+
+# Delegation
+
+https://stackoverflow.com/questions/39743700/java-spnego-authentication-kerberos-constrained-delegation-kcd-to-backend-se
+
+https://stackoverflow.com/questions/12529243/delegate-forward-kerberos-tickets-with-spring-security
