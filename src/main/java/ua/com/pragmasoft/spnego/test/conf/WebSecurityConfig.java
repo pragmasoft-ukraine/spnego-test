@@ -73,15 +73,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public SunJaasKerberosTicketValidator sunJaasKerberosTicketValidator() {
         SunJaasKerberosTicketValidator ticketValidator = new SunJaasKerberosTicketValidator();
-        ticketValidator.setServicePrincipal("HTTP/demo.kerberos.bealdung.com@baeldung.com");
-        ticketValidator.setKeyTabLocation(new FileSystemResource("baeldung.keytab"));
+        ticketValidator.setServicePrincipal("fna/krb5.local");
+        ticketValidator.setKeyTabLocation(new FileSystemResource("fna.keytab"));
         ticketValidator.setDebug(true);
         return ticketValidator;
     }
 
     @Bean
     public UserDetailsService dummyUserDetailsService() {
-        return (String userName) -> new User(userName, "notUsed", true, true, true, true, AuthorityUtils.createAuthorityList("ROLE_USER"));
+        return (String userName) -> new User(userName, "notUsed", true, true, true, true,
+                AuthorityUtils.createAuthorityList("ROLE_USER"));
     }
 
 }
