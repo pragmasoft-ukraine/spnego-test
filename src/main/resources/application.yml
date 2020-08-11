@@ -1,0 +1,11 @@
+logging:
+  level:
+    root: INFO # DEBUG
+    ua.com.pragmasoft: DEBUG
+app:
+  security:
+    kerberos:
+      service-principal: HTTP/localhost # MUST be HTTP/<full qualified domain name of the web server domain>
+      keytab-location: http.keytab # relative to the current directory cwd
+      spnego-entrypoint: /spnego.html
+  

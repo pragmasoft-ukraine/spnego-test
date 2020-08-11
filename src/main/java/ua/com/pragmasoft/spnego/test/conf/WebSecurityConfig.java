@@ -1,5 +1,6 @@
 package ua.com.pragmasoft.spnego.test.conf;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
@@ -21,10 +22,29 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Value("${app.security.kerberos.service-principal:HTTP/localhost}")
+	private String servicePrincipal;
+
+	@Value("${app.security.kerberos.keytab-location:http.keytab}")
+	private String keytabLocation;
+
+	@Value("${app.security.kerberos.spnego-entrypoint:/spnego.html}")
+	private String spnegoEntrypoint;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().anyRequest().authenticated().and().addFilterBefore(
-                spnegoAuthenticationProcessingFilter(authenticationManagerBean()), BasicAuthenticationFilter.class);
+        // @formatter:off
+        http
+            .exceptionHandling()
+                .authenticationEntryPoint(spnegoEntryPoint())
+                .and()
+            .authorizeRequests()
+                .anyRequest()
+                    // .permitAll()
+                    .authenticated()
+                    .and()
+            .addFilterBefore(spnegoAuthenticationProcessingFilter(authenticationManagerBean()), BasicAuthenticationFilter.class);
+        // @formatter:on
     }
 
     @Override
@@ -51,7 +71,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public SpnegoEntryPoint spnegoEntryPoint() {
-        return new SpnegoEntryPoint("/login");
+        return new SpnegoEntryPoint(spnegoEntrypoint);
     }
 
     @Bean
@@ -73,9 +93,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public SunJaasKerberosTicketValidator sunJaasKerberosTicketValidator() {
         SunJaasKerberosTicketValidator ticketValidator = new SunJaasKerberosTicketValidator();
-        ticketValidator.setServicePrincipal("fna/krb5.local");
-        ticketValidator.setKeyTabLocation(new FileSystemResource("fna.keytab"));
+        ticketValidator.setServicePrincipal(this.servicePrincipal);
+        ticketValidator.setKeyTabLocation(new FileSystemResource(this.keytabLocation));
         ticketValidator.setDebug(true);
+        ticketValidator.setHoldOnToGSSContext(true);
         return ticketValidator;
     }
 
