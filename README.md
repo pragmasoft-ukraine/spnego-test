@@ -1,6 +1,6 @@
 # Kerberos credentials
 
-`kadmin:  ank -randkey HTTP/localhost`
+`kadmin:  ank -randkey +ok_to_auth_as_delegate HTTP/localhost`
 
 `kadmin:  ktadd -k /home/zdv/Projects/test/spnego-test/http.keytab HTTP/localhost`
 
