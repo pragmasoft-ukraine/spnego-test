@@ -1,5 +1,8 @@
 package ua.com.pragmasoft.spnego.test.conf;
 
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
+
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Optional;
@@ -65,8 +68,9 @@ public final class KerberosTicketValidatorImpl implements KerberosTicketValidato
 
         final PrivilegedExceptionAction<KerberosTicketValidation> validateTicketAction = () -> {
             byte[] token = tweakJdkRegression(kerberosTicket);
+            var gssManager = GSSManager.getInstance();
             GSSName gssName = null;
-            GSSContext context = GSSManager.getInstance().createContext((GSSCredential) null);
+            GSSContext context = gssManager.createContext((GSSCredential) null);
             while (!context.isEstablished()) {
                 token = context.acceptSecContext(token, 0, token.length);
                 gssName = context.getSrcName();
@@ -74,8 +78,19 @@ public final class KerberosTicketValidatorImpl implements KerberosTicketValidato
                     throw new BadCredentialsException("GSSContext name of the context initiator is null");
                 }
             }
-            return new KerberosTicketValidation(gssName.toString(), servicePrincipalName, token, context);
+            
+            final GSSName subjectKrbName = context.getTargName();
+
+            final GSSCredential subjectCreds = gssManager.createCredential(subjectKrbName, GSSCredential.INDEFINITE_LIFETIME, context.getMech(), GSSCredential.INITIATE_AND_ACCEPT);
     
+            final Subject serverSubject = new Subject(true, singleton(new KerberosPrincipal(subjectKrbName.toString())), emptySet(), singleton(subjectCreds));
+    
+            return new KerberosTicketValidation(gssName.toString(), servicePrincipalName, token, context) {
+                @Override
+                public Subject subject() {
+                    return serverSubject;
+                }                
+            };
         };
 
         try {
