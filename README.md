@@ -13,6 +13,10 @@
 `kdestroy` destroys ticket
 
 
+# Kerberos in PostgreSQL
+
+https://paquier.xyz/manuals/postgresql/kerberos/
+
 # Delegation
 
 https://stackoverflow.com/questions/39743700/java-spnego-authentication-kerberos-constrained-delegation-kcd-to-backend-se

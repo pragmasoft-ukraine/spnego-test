@@ -12,7 +12,6 @@ import javax.security.auth.kerberos.KerberosPrincipal;
 import org.ietf.jgss.GSSContext;
 import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSException;
-import org.ietf.jgss.GSSManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +22,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.kerberos.authentication.KerberosServiceRequestToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.sun.security.jgss.ExtendedGSSCredential;
 
 @RestController
 public class CredentialsController {
@@ -46,16 +47,22 @@ public class CredentialsController {
 
         GSSContext context = token.getTicketValidation().getGssContext();
 
-        var delegated = context.getDelegCred();
+        GSSCredential delegated = context.getDelegCred();
         
         logger.debug("Delegated credentials {}", null != delegated ? delegated.getName() : " are not available");
 
         // to use server credentials:
-        // final var subject = token.getTicketValidation().subject();
+        final var serverSubject = token.getTicketValidation().subject();
+        ExtendedGSSCredential serverCred = serverSubject.getPrivateCredentials(ExtendedGSSCredential.class).iterator().next();
+
+        var clientName = context.getSrcName();
+
+        delegated = serverCred.impersonate(clientName);
+
         // final var user = subject.getPrincipals().iterator().next().getName();
 
         // to use delegated credentials:
-        final var user = token.getTicketValidation().username();
+        final var user = clientName.toString(); // token.getTicketValidation().username();
         final var subject = new Subject(true, singleton(new KerberosPrincipal(user)), emptySet(), singleton(delegated));
 
 
