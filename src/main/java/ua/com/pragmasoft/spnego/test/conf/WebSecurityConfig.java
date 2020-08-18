@@ -19,6 +19,9 @@ import org.springframework.security.kerberos.web.authentication.SpnegoAuthentica
 import org.springframework.security.kerberos.web.authentication.SpnegoEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import ua.com.pragmasoft.security.kerberos.KerberosTicketValidatorImpl;
+import ua.com.pragmasoft.security.kerberos.TypedKrb5LoginModuleConfiguration;
+
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 

@@ -4,7 +4,7 @@ spring:
 logging:
   level:
     root: INFO # DEBUG
-    ua.com.pragmasoft: DEBUG
+    ua.com.pragmasoft: TRACE
 app:
   security:
     kerberos:

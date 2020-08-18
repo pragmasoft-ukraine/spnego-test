@@ -1,4 +1,4 @@
-package ua.com.pragmasoft.spnego.test.conf;
+package ua.com.pragmasoft.security.kerberos;
 
 import java.util.HashMap;
 import java.util.Map;

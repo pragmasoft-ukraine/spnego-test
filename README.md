@@ -2,9 +2,11 @@
 
 `kadmin:  ank -randkey +ok_to_auth_as_delegate HTTP/localhost`
 
-`kadmin:  ktadd -k /home/zdv/Projects/test/spnego-test/http.keytab HTTP/localhost`
+`kadmin:  ktadd -k http.keytab HTTP/localhost`
 
 `kinit` obtains kerberos tgt ticket and stores it into the local cache
+
+`kvno -k http.keytab -U zdv -P HTTP/krb5.local postgres/krb5.local`
 
 `klist` shows ticket information
 

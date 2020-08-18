@@ -1,4 +1,4 @@
-package ua.com.pragmasoft.spnego.test.conf;
+package ua.com.pragmasoft.security.kerberos;
 
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
