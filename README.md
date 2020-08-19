@@ -49,9 +49,7 @@ Valid starting     Expires            Service principal
 
 https://paquier.xyz/manuals/postgresql/kerberos/
 
-# Delegation
-
-https://stackoverflow.com/questions/39743700/java-spnego-authentication-kerberos-constrained-delegation-kcd-to-backend-se
+# Here's why do we need to rewrite SunJaasKerberosTicketValidator
 
 https://stackoverflow.com/questions/12529243/delegate-forward-kerberos-tickets-with-spring-security
 
@@ -140,3 +138,7 @@ EOF
 #How to set up delegation ACLs
 
 http://kerberos.996246.n3.nabble.com/Constrained-Delegation-error-quot-KDC-policy-rejects-request-quot-td48955.html
+
+#TODO
+
+LdapUserDetailsService instead of dummyUserDetailsService

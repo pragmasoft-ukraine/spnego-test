@@ -23,12 +23,15 @@ public class WithKerberosAuthAspect {
         // pointcut method is intentionally empty
     }
 
-    @Around("ua.com.pragmasoft.security.kerberos.WithKerberosAuthAspect.withKerberosAuthPointcut(auth)")
+    @SuppressWarnings("java:S112")
+    @Around("withKerberosAuthPointcut(auth)")
     public Object establishJaasAuthContext(ProceedingJoinPoint joinPoint, WithKerberosAuth auth) throws Throwable {
 
-        logger.debug("WithKerberosAuthAspect before invocation {}", auth.value());
+        final UseSubject clientOrServer = auth.value();
 
-        Subject subject = null;
+        logger.debug("WithKerberosAuthAspect before invocation {}", clientOrServer);
+
+        Subject subject = KerberosContextUtils.getSpringSecurityContectSubject(clientOrServer);
 
         try {
             final Object result = Subject.doAs(subject, wrappedJointPointProceed(joinPoint));

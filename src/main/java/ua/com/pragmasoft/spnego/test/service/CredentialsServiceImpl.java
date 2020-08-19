@@ -6,6 +6,7 @@ import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.stereotype.Service;
 
 import ua.com.pragmasoft.security.kerberos.KerberosContextUtils;
+import ua.com.pragmasoft.security.kerberos.UseSubject;
 import ua.com.pragmasoft.security.kerberos.WithKerberosAuth;
 
 @Service
@@ -15,7 +16,7 @@ public class CredentialsServiceImpl implements CredentialsService {
     String jdbcUrl;
 
     @Override
-    @WithKerberosAuth
+    @WithKerberosAuth(UseSubject.DELEGATED)
     public String currentDatabaseUser() {
 
         final String userName = KerberosContextUtils.getSubjectUserName();
