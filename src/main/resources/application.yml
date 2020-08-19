@@ -4,6 +4,7 @@ spring:
 logging:
   level:
     root: INFO # DEBUG
+    org.springframework.aop: TRACE
     ua.com.pragmasoft: TRACE
 app:
   security:

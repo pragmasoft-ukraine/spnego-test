@@ -18,12 +18,12 @@ public class WithKerberosAuthAspect {
 
     static final Logger logger = LoggerFactory.getLogger(WithKerberosAuthAspect.class);
 
-    @Pointcut(value = "@annotation(auth)")
+    @Pointcut("@annotation(auth)")
     public void withKerberosAuthPointcut(WithKerberosAuth auth) {
         // pointcut method is intentionally empty
     }
 
-    @Around("ua.com.pragmasoft.security.kerberos.withKerberosAuthPointcut(auth)")
+    @Around("ua.com.pragmasoft.security.kerberos.WithKerberosAuthAspect.withKerberosAuthPointcut(auth)")
     public Object establishJaasAuthContext(ProceedingJoinPoint joinPoint, WithKerberosAuth auth) throws Throwable {
 
         logger.debug("WithKerberosAuthAspect before invocation {}", auth.value());
