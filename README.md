@@ -28,9 +28,9 @@ Once authenticated, client will use session cookie to authenticate other request
 
 The GET request to the http://krb5.local:8080/credentials creates a delegated token to connect to the database, establishes JDBC connection using this token for kerberos authentication, executes the following query `select current_user` to prove that credentials are actually delegated and returns result in http response to the caller. 
 
-Internally, delegation is implemented as aspect, public class WithKerberosAuthAspect, which binds JAAS Subject with kerberos credentials to the thread, executing method, annotated with @WithKerberosAuth annotation.
+Internally, delegation is implemented as AOP aspect `WithKerberosAuthAspect`, which binds JAAS Subject with kerberos credentials to the thread, executing method, annotated with @WithKerberosAuth annotation.
 
-This annotation accepts parameter, UseSubject enumeration, with two values: `SERVICE` and `DELEGATED`, allowing to propagate either credentials of the service (spring application) itself, or client, which uses it.
+This annotation accepts a parameter of a type `UseSubject` enumeration, with two values: `SERVICE` and `DELEGATED`, allowing to propagate either credentials of the service (spring application) itself, or client, which has been authenticated to it.
 
 ## Environment configuration
 
@@ -48,6 +48,7 @@ https://ubuntu.com/server/docs/service-ldap
 
 https://ubuntu.com/server/docs/service-kerberos-with-openldap-backend
 
+(below are commands from the reference above, modified for my configuration)
 
 ```
 ldapadd -x -D cn=admin,dc=krb5,dc=local -W <<EOF
